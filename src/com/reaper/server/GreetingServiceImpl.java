@@ -114,6 +114,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		if(!isUserLoggedOn(username, passwordHash)) {
 			throw new IllegalArgumentException("Not logged on.");
 		}
-	//	DatabaseManagement.createTopic(title, firstPost, username, tag);
+		DatabaseManagement.createTopic(title, firstPost, username, tag);
 	}
 }
