@@ -1,0 +1,3 @@
+user(_username_, passwordHash, creditNo, money)
+topic(_id_, title, gameTag, discussionTypeTag) 
+post(-id-, -topic(id)-, user(username) as poster, datePosted, dateEdited, content)
