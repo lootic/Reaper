@@ -24,13 +24,7 @@ public class DatabaseManagement {
 			isInitiated = true;
 			try {
 				Class.forName ("org.sqlite.JDBC");
-				Statement statement = DriverManager.getConnection(
-						"jdbc:sqlite:reaper.db").createStatement();
-				statement.executeQuery("CREATE TABLE IF NOT EXISTS");
 			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

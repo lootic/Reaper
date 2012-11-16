@@ -3,7 +3,8 @@ package com.reaper.client;
 import java.util.ArrayList;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.reaper.shared.Topic;
+import com.reaper.shared.Bet;
+import com.reaper.shared.Tag;
 
 /**
  * The async counterpart of <code>GreetingService</code>.
@@ -16,9 +17,6 @@ public interface GreetingServiceAsync {
 			String mail, AsyncCallback<String> callback)
 			throws IllegalArgumentException;
 
-	void getTopics(String username, String passwordHash, String tags,
-			AsyncCallback<ArrayList<Topic>> callback);
-
-	void createTopic(String username, String passwordHash, String title,
-			String firstPost, int tag, AsyncCallback<Void> callback);
+	void getBets(ArrayList<Tag> tags,
+			AsyncCallback<ArrayList<Bet>> asyncCallback);
 }

@@ -4,126 +4,98 @@ import java.util.ArrayList;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DockPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.reaper.shared.Topic;
+import com.google.gwt.user.client.ui.ScrollPanel;
+import com.reaper.shared.Bet;
 
+/**
+ * Mediator class
+ * 
+ * @author lootic
+ * 
+ */
 public class Reaper implements EntryPoint {
 
+	private final DockPanel panel = new DockPanel();
+	private final FlowPanel betsPanel = new FlowPanel();
+	private final FlowPanel headerPanel = new FlowPanel();
+	private final Button loginButton = new Button("Login");
 	private final GreetingServiceAsync service = GWT
 			.create(GreetingService.class);
-	private final Button createTopicButton = new Button("Create new topic");
-	private final Login login = new Login();
-
-	private String passwordHash;
+	private final LoginWidget login = new LoginWidget();
 
 	public void onModuleLoad() {
+		//create
+		ScrollPanel scrollPanel = new ScrollPanel();
 		
-		login.setRegisterMode(false);
-
+		//customize
 		RootPanel.get().setStyleName("root");
-		RootPanel.get("login").add(login);
-		RootPanel.get("login").setStyleName("login");
-		class CreateTopicButtonHandler implements ClickHandler {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				service.createTopic(login.getUser(), passwordHash, "lol",
-						"din Mamma är bög", 1, new AsyncCallback<Void>() {
-
-							@Override
-							public void onFailure(Throwable caught) {
-							}
-
-							@Override
-							public void onSuccess(Void result) {
-								loadLogin();
-							}
-						});
-			}
-		}
-
-		class SendButtonHandler implements ClickHandler, KeyUpHandler {
-			public void onClick(ClickEvent event) {
-				sendNameToServer();
-			}
-
-			public void onKeyUp(KeyUpEvent event) {
-				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-					sendNameToServer();
-				}
-			}
-
-			private void sendNameToServer() {
-				// First, we validate the input.
-				String textToServer = login.getUser();
-				String passwordText = login.getPassword();
-				String passwordVerifyText = login.getPasswordVerify();
-				String mailText = login.getMail();
-
-				// Then, we send the input to the server.
-				if (login.isRegisterToggled()) {
-					service.register(textToServer, passwordText,
-							passwordVerifyText, mailText,
-							new AsyncCallback<String>() {
-								public void onFailure(Throwable caught) {
-									login.setErrorFeedbackmessage(caught
-											.getMessage());
-								}
-
-								public void onSuccess(String result) {
-									login.setErrorFeedbackmessage(result);
-								}
-							});
-				} else {
-					service.login(textToServer, passwordText,
-							new AsyncCallback<String>() {
-								public void onFailure(Throwable caught) {
-									login.setErrorFeedbackmessage(caught
-											.getMessage());
-								}
-
-								public void onSuccess(String result) {
-									passwordHash = result;
-									loadLogin();
-								}
-							});
-				}
-
-			}
-		}
-
-		// Add a handler to send the name to the server
-		SendButtonHandler sendHandler = new SendButtonHandler();
-		login.getSendButton().addClickHandler(sendHandler);
-		createTopicButton.addClickHandler(new CreateTopicButtonHandler());
+		
+		//connect
+		RootPanel.get().add(panel);
+		scrollPanel.add(betsPanel);
+		login.getSendButton().addClickHandler(new SendButtonHandler(this));
+		panel.add(scrollPanel, DockPanel.CENTER);
+		panel.add(headerPanel, DockPanel.NORTH);
+		headerPanel.add(new Label("REAPER - betting iz seriouz buzinezz"));
+		
+		//init
+		getBets();
 	}
 
-	private void loadLogin() {
-		Label hello = new Label("hello");
-		RootPanel.get().clear();
-		RootPanel.get().add(hello);
-		RootPanel.get().add(createTopicButton);
-		service.getTopics(login.getUser(), passwordHash, null,
-				new AsyncCallback<ArrayList<Topic>>() {
+	private void getBets() {
+		service.getBets(null, new AsyncCallback<ArrayList<Bet>>() {
 
-					@Override
+			@Override
+			public void onFailure(Throwable caught) {
+			}
+
+			@Override
+			public void onSuccess(ArrayList<Bet> bets) {
+				for (Bet bet : bets) {
+					betsPanel.add(new BetWidget(bet));
+				}
+			}
+		});
+	}
+
+	public void register() {
+		service.register(login.getUser(), login.getPassword(), login.getPasswordVerify(),
+				login.getPasswordVerify(), new AsyncCallback<String>() {
 					public void onFailure(Throwable caught) {
+						login.setErrorFeedbackmessage(caught.getMessage());
 					}
 
-					@Override
-					public void onSuccess(ArrayList<Topic> topics) {
-						for (Topic topic : topics) {
-							RootPanel.get().add(new Post(topic.getTitle()));
-						}
+					public void onSuccess(String result) {
+						login.setErrorFeedbackmessage(result);
 					}
 				});
+
+	}
+
+	public void login() {
+		service.login(login.getUser(), login.getPassword(),
+				new AsyncCallback<String>() {
+					public void onFailure(Throwable caught) {
+						login.setErrorFeedbackmessage(caught.getMessage());
+					}
+
+					public void onSuccess(String result) {
+						getBets();
+					}
+				});
+	}
+	
+	public void send() {
+		if (login.isRegisterToggled()) {
+			register();
+		} else {
+			login();
+		}
 	}
 }

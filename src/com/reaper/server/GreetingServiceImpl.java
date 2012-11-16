@@ -6,7 +6,8 @@ import java.util.HashSet;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.reaper.client.GreetingService;
-import com.reaper.shared.Topic;
+import com.reaper.shared.Bet;
+import com.reaper.shared.Tag;
 
 /**
  * The server side implementation of the RPC service.
@@ -74,18 +75,29 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public ArrayList<Topic> getTopics(String username, String passwordHash, String tags)
+	public ArrayList<Bet> getBets(ArrayList<Tag> tags)
 			throws IllegalArgumentException {
 		System.out.println("hello!");
 		
-		DatabaseManagement.initIfNotInitiated();
 		
-		ArrayList<Topic> topics = new ArrayList<Topic>();
-		Topic topic = new Topic();
-		topic.setTitle("This is some text proving that it comes from the server.");
-		topics.add(topic);
+		ArrayList<Bet> bets = new ArrayList<Bet>();
+		Bet bet = new Bet();
+		bet.bestOf = 5;
+//		bet.bettingDeadline = new Date();
+		bet.leftPool = 42;
+		bet.rightPool = 58;
+		bet.rightTeam = "SK";
+		bet.leftTeam = "EG";
+		bet.tournamentName = "The International";
+		bet.tag = Tag.DOTA2;
+		bet.streamHTMLLink = "http://www.youtube.com";
 		
-		return topics;
+		bets.add(bet);
+		bet = new Bet("Stefano", "Leenock", "South Korean Super Leuge", Tag.STARCRAFT2, (short)3, (short)28, (short)72, (short)0, (short)0, "http://www.youtube.com");
+		bets.add(bet);
+		System.out.println("returns bets");
+		
+		return bets;
 	}
 
 	/**
@@ -95,6 +107,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	 * @param passwordHash the hash of the password the user got.
 	 * @return whether the user is logged on or not.
 	 */
+	@SuppressWarnings("unused")
 	private boolean isUserLoggedOn(String username, String passwordHash) {
 		// TODO Auto-generated method stub
 		UserData user = userDB.get(username);
@@ -105,15 +118,5 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			return true;
 		}
 		return false;
-	}
-
-	@Override
-	public void createTopic(String username, String passwordHash, String title,
-			String firstPost, int tag) {
-
-		if(!isUserLoggedOn(username, passwordHash)) {
-			throw new IllegalArgumentException("Not logged on.");
-		}
-		DatabaseManagement.createTopic(title, firstPost, username, tag);
 	}
 }
