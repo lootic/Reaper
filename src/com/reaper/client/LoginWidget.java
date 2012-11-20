@@ -22,11 +22,12 @@ public class LoginWidget extends FlexTable {
 
 	LoginWidget() {
 		sendButton.addStyleName("sendButton");
-		FlexCellFormatter cellFormatter = this.getFlexCellFormatter();
+		FlexCellFormatter cellFormatter = getFlexCellFormatter();
 		cellFormatter.setColSpan(0, 0, 2);
 		cellFormatter.setColSpan(1, 0, 2);
 		cellFormatter.setColSpan(2, 0, 2);
 		cellFormatter.setColSpan(3, 0, 2);
+		cellFormatter.setColSpan(5, 0, 2);
 		setWidget(0, 0, nameField);
 		setWidget(1, 0, password);
 		setWidget(2, 0, passwordVerify);

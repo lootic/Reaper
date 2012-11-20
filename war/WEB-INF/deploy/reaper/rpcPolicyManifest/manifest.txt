@@ -1,2 +1,3 @@
 # Module reaper
 # RPC service class, partial path of RPC policy file
+com.reaper.client.GreetingService, E38280C54F9CFB0BE2DF8C9741F51799.gwt.rpc

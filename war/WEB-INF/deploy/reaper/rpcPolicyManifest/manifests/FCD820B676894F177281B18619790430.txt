@@ -1,2 +1,0 @@
-serviceClass: com.reaper.client.GreetingService
-path: EAE5C7F1CD9B731F18BD514F2E2AD732.gwt.rpc
