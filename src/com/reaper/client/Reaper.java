@@ -22,7 +22,7 @@ import com.reaper.shared.Bet;
 public class Reaper implements EntryPoint {
 
 	private final DockPanel panel = new DockPanel();
-	private final FlowPanel betsPanel = new FlowPanel();
+	private final FlowPanel contentPanel = new FlowPanel();
 	private final FlowPanel headerPanel = new FlowPanel();
 	private final Button loginButton = new Button("Login");
 	private final GreetingServiceAsync service = GWT
@@ -38,7 +38,8 @@ public class Reaper implements EntryPoint {
 		
 		//connect
 		RootPanel.get().add(panel);
-		scrollPanel.add(betsPanel);
+		scrollPanel.add(contentPanel);
+		contentPanel.add(new EmbeddedVideoWidget("http://www.twitch.tv/widgets/live_embed_player.swf?channel=siglemic"));
 		login.getSendButton().addClickHandler(new SendButtonHandler(this));
 		panel.add(scrollPanel, DockPanel.CENTER);
 		panel.add(headerPanel, DockPanel.NORTH);
@@ -58,7 +59,7 @@ public class Reaper implements EntryPoint {
 			@Override
 			public void onSuccess(ArrayList<Bet> bets) {
 				for (Bet bet : bets) {
-					betsPanel.add(new BetWidget(bet));
+					contentPanel.add(new BetWidget(bet));
 				}
 			}
 		});
