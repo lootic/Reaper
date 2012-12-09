@@ -14,6 +14,8 @@ import com.reaper.shared.Tag;
 public interface GreetingService extends RemoteService {
 	String login(String username, String password)
 			throws IllegalArgumentException;
+	
+	void logout();
 
 	String register(String username, String password, String passwordVerify,
 			String mail) throws IllegalArgumentException;

@@ -19,4 +19,6 @@ public interface GreetingServiceAsync {
 
 	void getBets(ArrayList<Tag> tags,
 			AsyncCallback<ArrayList<Bet>> asyncCallback);
+
+	void logout(AsyncCallback<Void> callback);
 }

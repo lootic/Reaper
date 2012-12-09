@@ -119,4 +119,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		}
 		return false;
 	}
+
+	@Override
+	public void logout() {
+		// TODO Auto-generated method stub
+		
+	}
 }

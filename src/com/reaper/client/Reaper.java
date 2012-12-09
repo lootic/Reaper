@@ -9,13 +9,8 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DockPanel;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.ScrollPanel;
 import com.reaper.shared.Bet;
 
 /**
@@ -31,6 +26,7 @@ public class Reaper implements EntryPoint {
 	private final LoginWidget login = new LoginWidget();
 	private final Button popupLoginButton = new Button("Login");
 	private final PopupPanel loginPanel = new PopupPanel();
+	private final BetListWidget betList = new BetListWidget();
 
 	public void onModuleLoad() {
 		// customize
@@ -61,9 +57,15 @@ public class Reaper implements EntryPoint {
 			}
 		});
 
-		RootPanel.get("main").add(new EmbeddedVideoWidget(
+		RootPanel
+				.get("main")
+				.add(new EmbeddedVideoWidget(
 						"http://www.twitch.tv/widgets/live_embed_player.swf?channel=siglemic"));
+		RootPanel.get("main").add(betList);
+		RootPanel.get("main").add(new Counter("amount"));
 		RootPanel.get("login").add(popupLoginButton);
+		RootPanel.get("main").add(new NumberTextfield("Test of numbers"));
+		getBets();
 	}
 
 	private void getBets() {
@@ -76,7 +78,7 @@ public class Reaper implements EntryPoint {
 			@Override
 			public void onSuccess(ArrayList<Bet> bets) {
 				for (Bet bet : bets) {
-					RootPanel.get("main").add(new BetWidget(bet));
+					betList.add(bet);
 				}
 			}
 		});
@@ -94,7 +96,6 @@ public class Reaper implements EntryPoint {
 						login.setErrorFeedbackmessage(result);
 					}
 				});
-
 	}
 
 	public void login() {
@@ -105,6 +106,7 @@ public class Reaper implements EntryPoint {
 					}
 
 					public void onSuccess(String result) {
+						loginPanel.setWidget(new AccountWidget());
 						getBets();
 					}
 				});
@@ -116,5 +118,18 @@ public class Reaper implements EntryPoint {
 		} else {
 			login();
 		}
+	}
+
+	public void logout() {
+		service.logout(new AsyncCallback<Void>() {
+			@Override
+			public void onFailure(Throwable caught) {
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				loginPanel.setWidget(login);
+			}
+		});
 	}
 }

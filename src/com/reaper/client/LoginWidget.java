@@ -6,13 +6,12 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.TextBox;
 
 public class LoginWidget extends FlexTable {
 	private final Textfield nameField = new Textfield("username");
 	private final Textfield mail = new Textfield("email");
-	private final TextBox password = new Textfield("password");
-	private final TextBox passwordVerify = new Textfield(
+	private final PasswordTextfield password = new PasswordTextfield("password");
+	private final PasswordTextfield passwordVerify = new PasswordTextfield(
 			"verify password");
 	private final Button registerToggleButton = new Button(
 			"I ain't got no motherfucking account!");
