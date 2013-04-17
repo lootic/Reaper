@@ -1,10 +1,11 @@
 package com.reaper.shared;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class Bet implements Serializable {
 	private static final long serialVersionUID = 9198558772952511345L;
-	// public Date bettingDeadline; //num of bytes
+	public long bettingDeadline; //unix time 8 byte
 	public String leftTeam; // 32 ändras inte
 	public String rightTeam; // 32 ändras inte
 	public String tournamentName; // 128 ändras inte

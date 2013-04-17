@@ -10,6 +10,9 @@ import com.reaper.shared.Bet;
 public class BetWidget extends FlexTable {
 
 	BetWidget(Bet bet) {
+	}
+	
+	private void constructorMethodA(Bet bet) {
 		FlexCellFormatter cell = this.getFlexCellFormatter();
 		cell.setColSpan(2, 0, 3);
 		Label label;

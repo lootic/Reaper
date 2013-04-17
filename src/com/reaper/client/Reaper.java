@@ -11,6 +11,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.ToggleButton;
 import com.reaper.shared.Bet;
 
 /**
@@ -43,24 +44,18 @@ public class Reaper implements EntryPoint {
 				if (loginPanel.isShowing()) {
 					loginPanel.hide();
 				} else {
-					loginPanel.show();
+					loginPanel.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+						public void setPosition(int offsetWidth, int offsetHeight) {
+							login.setRegisterMode(false);
+							int left = (Window.getClientWidth() - offsetWidth);
+							int top = 40;
+							loginPanel.setPopupPosition(left, top);
+						}
+					});
 				}
 			}
 		});
 
-		loginPanel.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
-			public void setPosition(int offsetWidth, int offsetHeight) {
-				login.setRegisterMode(false);
-				int left = (Window.getClientWidth() - offsetWidth);
-				int top = 40;
-				loginPanel.setPopupPosition(left, top);
-			}
-		});
-
-		RootPanel
-				.get("main")
-				.add(new EmbeddedVideoWidget(
-						"http://www.twitch.tv/widgets/live_embed_player.swf?channel=siglemic"));
 		RootPanel.get("main").add(betList);
 		RootPanel.get("main").add(new Counter("amount"));
 		RootPanel.get("login").add(popupLoginButton);

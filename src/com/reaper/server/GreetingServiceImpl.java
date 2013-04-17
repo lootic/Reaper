@@ -1,10 +1,14 @@
 package com.reaper.server;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.ibm.icu.text.SimpleDateFormat;
 import com.reaper.client.GreetingService;
 import com.reaper.shared.Bet;
 import com.reaper.shared.Tag;
@@ -19,6 +23,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	HashMap<String, UserData> userDB = new HashMap<String, UserData>();
 	HashSet<String> registeredMails = new HashSet<String>();
 	private String currentSalt;
+	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm");
 	
 	public String login(String username, String password)
 			throws IllegalArgumentException {
@@ -74,17 +79,22 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		return currentSalt;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public ArrayList<Bet> getBets(ArrayList<Tag> tags)
 			throws IllegalArgumentException {
 		System.out.println("hello!");
 		
+		// from this: "YYYYMMDDHHMM" to long
 		
 		ArrayList<Bet> bets = new ArrayList<Bet>();
 		Bet bet = new Bet();
 		bet.bestOf = 5;
-//		bet.bettingDeadline = new Date();
-		bet.leftPool = 42;
+		try {
+			bet.bettingDeadline = dateFormat.parse("201304182200").getTime();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		bet.rightPool = 58;
 		bet.rightTeam = "SK";
 		bet.leftTeam = "EG";
@@ -94,6 +104,11 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		
 		bets.add(bet);
 		bet = new Bet("Stefano", "Leenock", "South Korean Super Leuge", Tag.STARCRAFT2, (short)3, (short)28, (short)72, (short)0, (short)0, "http://www.youtube.com");
+		try {
+			bet.bettingDeadline = dateFormat.parse("201304172100").getTime();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		bets.add(bet);
 		System.out.println("returns bets");
 		
