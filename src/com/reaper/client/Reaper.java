@@ -26,7 +26,7 @@ public class Reaper implements EntryPoint {
 			.create(GreetingService.class);
 	private final LoginWidget login = new LoginWidget();
 	private final Button popupLoginButton = new Button("Login");
-	private final PopupPanel loginPanel = new PopupPanel();
+	private final LoginPanel loginPanel = new LoginPanel();
 	private final BetListWidget betList = new BetListWidget();
 
 	public void onModuleLoad() {
@@ -44,14 +44,8 @@ public class Reaper implements EntryPoint {
 				if (loginPanel.isShowing()) {
 					loginPanel.hide();
 				} else {
-					loginPanel.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
-						public void setPosition(int offsetWidth, int offsetHeight) {
-							login.setRegisterMode(false);
-							int left = (Window.getClientWidth() - offsetWidth);
-							int top = 40;
-							loginPanel.setPopupPosition(left, top);
-						}
-					});
+					loginPanel.resize();
+					loginPanel.show();
 				}
 			}
 		});
